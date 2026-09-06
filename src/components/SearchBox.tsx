@@ -1,46 +1,10 @@
-import { useEffect, useState, type ChangeEvent, type KeyboardEvent } from "react";
-import { recommendedSearchTermsGet } from "../api/recommended-search-terms";
-import { getRandom } from "../util/get-random";
+import { useState, type ChangeEvent, type KeyboardEvent } from "react";
 import { useNavigate } from "react-router";
+import WordSuggester from "./WordSuggester";
 
 export default function SearchBox() {
-  const [terms, setTerms] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [suggestedTerm, setSuggestedTerm] = useState("lightning bolt");
-  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (terms.length === 0) {
-        return;
-      }
-
-      setSuggestedTerm(getRandom(terms));
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [terms]);
-
-  useEffect(() => {
-    let isActive = true;
-
-    recommendedSearchTermsGet()
-      .then((result) => {
-        if (isActive) setTerms(result);
-      })
-      .catch(() => {
-        if (isActive) setError("Couldn't load recommended searches.");
-      })
-      .finally(() => {
-        if (isActive) setIsLoading(false);
-      });
-
-    return () => {
-      isActive = false;
-    };
-  }, []);
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.currentTarget.value);
@@ -60,13 +24,14 @@ export default function SearchBox() {
   };
 
   return (
-    <div className="card bg-base-100 w-96 shadow-lg w-full">
+    <div className="card bg-base-100 shadow-lg w-full">
       <div className="card-body">
+        <WordSuggester />
         <div className="flex items-center gap-4 my-2">
           <input
             type="text"
-            placeholder={`Try "${suggestedTerm}"`}
-            className="input input-xl flex-grow focus:outline-none focus:ring-0 focus:border-primary"
+            placeholder="Search for any word, in any language"
+            className="input input-xl grow focus:outline-none focus:ring-0 focus:border-primary"
             onChange={handleOnChange}
             onKeyDown={handleOnKeyDown}
           />
@@ -78,9 +43,6 @@ export default function SearchBox() {
             search
           </button>
         </div>
-
-        {error && <p>{error}</p>}
-        {isLoading && <progress className="progress progress-primary w-full"></progress>}
       </div>
     </div>
   );

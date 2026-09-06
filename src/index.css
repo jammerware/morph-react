@@ -1,24 +1,41 @@
 @import "tailwindcss";
+
+/* establish themes for dark and light mode */
 @plugin "daisyui" {
   themes:
-    light --default,
-    dark --prefersdark,
-    sunset;
+    acid --default,
+    sunset --prefersdark;
+}
+
+@plugin "daisyui/theme" {
+  name: "dim";
+  font-family: "Inter", sans-serif;
+  /* set some variables here */
 }
 
 @theme {
   --font-brand: "Passion One", sans-serif;
 }
 
-/* DaisyUI override: glow primary on focuss */
+/* DaisyUI override: glow primary on focus */
 .input:focus,
 .select:focus,
 .textarea:focus,
 .checkbox:focus,
 .radio:focus {
   outline: none;
-  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-primary) 25%, transparent);
+  box-shadow: 0 0 0 4px
+    color-mix(in oklab, var(--color-primary) 25%, transparent);
   border-color: var(--color-primary);
+}
+
+/* breadcrumb a gets daisy primary */
+.breadcrumbs a {
+  color: var(--color-primary);
+}
+
+:root {
+  font-family: "Inter", sans-serif;
 }
 
 body,

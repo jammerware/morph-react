@@ -1,13 +1,6 @@
 import type { ReactNode } from "react";
-import {
-  isRouteErrorResponse,
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "react-router";
-
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import GlobalErrorBoundary from "../components/GlobalErrorBoundary";
 import "../index.css";
 
 export function Layout({ children }: { children: ReactNode }) {
@@ -17,12 +10,31 @@ export function Layout({ children }: { children: ReactNode }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        {/* Brand font (Passion One) */}
+        {/* Google fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700;900&display=swap" rel="stylesheet"></link>
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+
+        {/* Brand font (Passion One) */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700;900&display=swap"
+          rel="stylesheet"
+        ></link>
+
+        {/* Content font (Inter) */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+          rel="stylesheet"
+        ></link>
+
         {/* Material icons */}
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
+        <link
+          href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet"
+        ></link>
         <title>Morph Chinese</title>
         <Meta />
         <Links />
@@ -45,23 +57,5 @@ export function HydrateFallback() {
 }
 
 export function ErrorBoundary({ error }: { error: unknown }) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-
-  if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
-  } else if (import.meta.env.DEV && error instanceof Error) {
-    details = error.message;
-  }
-
-  return (
-    <main className="p-8">
-      <h1 className="text-2xl font-bold">{message}</h1>
-      <p>{details}</p>
-    </main>
-  );
+  return <GlobalErrorBoundary error={error} />;
 }
