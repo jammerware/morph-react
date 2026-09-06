@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { type ApiDecompositionGetResponse } from "../../api/models/decomposition-get-response";
 import { decompositionGet } from "../../api/decomposition";
-import { useCopyToClipboard } from "usehooks-ts";
+import WordActionButton from "../../components/WordActionButton";
 
 export default function Word() {
   const params = useParams<{ word: string }>();
-  const [copiedText, copy] = useCopyToClipboard();
   const [error, setError] = useState<string | null>(null);
-  const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [decomposition, setDecomposition] = useState<ApiDecompositionGetResponse | null>(null);
 
@@ -92,32 +90,28 @@ export default function Word() {
 
         <div className="card-actions justify-end">
           <div className="tooltip" data-tip="View on Google Translate">
-            <button className="btn btn-primary btn-circle material-icons">g_translate</button>
-          </div>
-
-          <div className="tooltip" data-tip="Copy Pinyin">
-            <button className="btn btn-primary btn-circle material-icons">font_download</button>
-          </div>
-
-          <div className="tooltip" data-tip="Copy Characters">
-            <button
-              className="btn btn-primary btn-circle material-icons"
-              onClick={() => handleCopy(decomposition!.word.pinyin)}
-              disabled={!decomposition?.word?.pinyin}
+            <Link
+              to={`https://translate.google.com/?sl=zh-CN&text=${decomposition?.word?.translation}&tl=en`}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              content_copy
-            </button>
+              <button className="btn btn-primary btn-circle material-icons">g_translate</button>
+            </Link>
           </div>
+
+          <WordActionButton
+            copyText={decomposition?.word.pinyin}
+            materialIcon="font_download"
+            tooltip="Copy Pinyin"
+          />
+
+          <WordActionButton
+            copyText={decomposition?.word.translation}
+            materialIcon="content_copy"
+            tooltip="Copy Characters"
+          ></WordActionButton>
         </div>
       </div>
-
-      {isCopied && (
-        <div className="toast toast-end">
-          <div className="alert alert-info">
-            <span>Copied "{copiedText}" to your clipboard</span>
-          </div>
-        </div>
-      )}
     </>
   );
 }
