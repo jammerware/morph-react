@@ -4,6 +4,7 @@ export default [
   layout("routes/layout.tsx", [
     index("routes/home.tsx"),
     route("word/:word", "routes/word.tsx"),
+    route("character/:character", "routes/character.tsx"),
     route("*", "routes/not-found.tsx"),
   ]),
 ] satisfies RouteConfig;

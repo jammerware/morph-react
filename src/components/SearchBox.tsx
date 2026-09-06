@@ -1,7 +1,7 @@
-import { useEffect, useState, type ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type KeyboardEvent } from "react";
 import { recommendedSearchTermsGet } from "../api/recommended-search-terms";
 import { getRandom } from "../util/get-random";
-import { useNavigate, useNavigation } from "react-router";
+import { useNavigate } from "react-router";
 
 export default function SearchBox() {
   const [terms, setTerms] = useState<string[]>([]);
@@ -46,7 +46,7 @@ export default function SearchBox() {
     setSearchTerm(event.currentTarget.value);
   };
 
-  const handleOnKeyDown = (keyEvent: KeyboardEvent) => {
+  const handleOnKeyDown = (keyEvent: KeyboardEvent<HTMLInputElement>) => {
     if (keyEvent.code === "Enter") {
       keyEvent.preventDefault();
       handleOnClick();
