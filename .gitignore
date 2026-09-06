@@ -6,8 +6,10 @@ npm-debug.log*
 .env.*
 
 # installed/built
-node_modules
 dist
+node_modules
+/build
+.react-router
 
 # Editor directories and files
 .vscode/*

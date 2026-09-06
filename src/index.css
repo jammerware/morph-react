@@ -1,1 +1,31 @@
 @import "tailwindcss";
+@plugin "daisyui" {
+  themes:
+    light --default,
+    dark --prefersdark,
+    sunset;
+}
+
+@theme {
+  --font-brand: "Passion One", sans-serif;
+}
+
+/* DaisyUI override: glow primary on focuss */
+.input:focus,
+.select:focus,
+.textarea:focus,
+.checkbox:focus,
+.radio:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-primary) 25%, transparent);
+  border-color: var(--color-primary);
+}
+
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+}
