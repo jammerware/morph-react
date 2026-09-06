@@ -17,6 +17,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: github-pages
     steps:
       - uses: actions/checkout@v4
 
@@ -30,6 +31,7 @@ jobs:
       - run: npm run build
         env:
           GITHUB_PAGES: "true"
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
       - name: Add SPA fallback for client-side routes
         run: cp build/client/index.html build/client/404.html
