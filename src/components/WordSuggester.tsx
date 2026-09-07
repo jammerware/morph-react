@@ -1,33 +1,19 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { arrayShuffle } from "../util/array-shuffle";
 import { recommendedSearchTermsGet } from "../api/recommended-search-terms";
 import RotatingPrompt from "./RotatingPrompt";
+import useAsync from "../hooks/useAsync";
 
 export default function WordSuggester() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [terms, setTerms] = useState<string[]>([]);
-
-  useEffect(() => {
-    let isActive = true;
-
-    recommendedSearchTermsGet()
-      .then((result) => {
-        if (isActive) {
-          setTerms(arrayShuffle(result));
-        }
-      })
-      .catch(() => {
-        if (isActive) throw new Error("Couldn't load recommended searches.");
-      })
-      .finally(() => {
-        if (isActive) setIsLoading(false);
-      });
-
-    return () => {
-      isActive = false;
-    };
-  }, []);
+  const { data: terms, isLoading } = useAsync(
+    () =>
+      recommendedSearchTermsGet()
+        .then(arrayShuffle)
+        .catch(() => {
+          throw new Error("Couldn't load recommended searches.");
+        }),
+    [],
+  );
 
   return (
     <>
@@ -35,7 +21,7 @@ export default function WordSuggester() {
         <progress className="progress progress-primary w-full"></progress>
       )}
 
-      {terms.length && (
+      {terms && terms.length > 0 && (
         <div className="flex gap-2">
           <div className="text-3xl">Try </div>
           <RotatingPrompt className="h-10 grow">

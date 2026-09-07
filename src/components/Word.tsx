@@ -1,41 +1,23 @@
-import { useEffect, useState } from "react";
 import type { ApiDecompositionGetResponse } from "../api/models/decomposition-get-response";
 import { Link } from "react-router";
 import Character from "./Character";
 import CharacterFrequency from "./CharacterFrequency";
 import WordActionButton from "./WordActionButton";
 import { decompositionGet } from "../api/decomposition";
+import useAsync from "../hooks/useAsync";
 
 export default function Word(props: { wordL1: string }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [decomposition, setDecomposition] =
-    useState<ApiDecompositionGetResponse | null>(null);
+  if (!props.wordL1) {
+    throw new Error("Props 'wordL1' required");
+  }
 
-  useEffect(() => {
-    if (!props.wordL1) {
-      throw new Error("Props 'wordL1' required");
-    }
-
-    let isLoading = true;
-
-    decompositionGet(props.wordL1)
-      .then((result) => {
-        if (isLoading) setDecomposition(result);
-      })
-      .catch(() => {
-        if (isLoading)
-          throw new Error(
-            `Couldn't load decomposition for word "${props.wordL1}".`,
-          );
-      })
-      .finally(() => {
-        if (isLoading) setIsLoading(false);
-      });
-
-    return () => {
-      isLoading = false;
-    };
-  }, [props.wordL1]);
+  const { data: decomposition, isLoading } = useAsync<ApiDecompositionGetResponse>(
+    () =>
+      decompositionGet(props.wordL1).catch(() => {
+        throw new Error(`Couldn't load decomposition for word "${props.wordL1}".`);
+      }),
+    [props.wordL1],
+  );
 
   const charactersMarkup =
     decomposition &&
