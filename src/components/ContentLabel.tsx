@@ -4,8 +4,8 @@ type ContentLabelProps = {
 
 export default function ContentLabel({ text }: ContentLabelProps) {
   return (
-    <dt className="text-sm font-medium text-base-content/60 tracking-widest mb-2">
+    <div className="text-sm font-medium text-base-content/60 tracking-widest mb-2">
       {text}
-    </dt>
+    </div>
   );
 }

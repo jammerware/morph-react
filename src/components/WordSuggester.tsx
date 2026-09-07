@@ -35,16 +35,18 @@ export default function WordSuggester() {
         <progress className="progress progress-primary w-full"></progress>
       )}
 
-      <div className="flex gap-2">
-        <div className="text-3xl">Try </div>
-        <RotatingPrompt className="h-10 grow">
-          {terms.map((t) => (
-            <Link key={t} to={`/word/${t}`} className="btn btn-primary">
-              {t}
-            </Link>
-          ))}
-        </RotatingPrompt>
-      </div>
+      {terms.length && (
+        <div className="flex gap-2">
+          <div className="text-3xl">Try </div>
+          <RotatingPrompt className="h-10 grow">
+            {terms.map((t) => (
+              <Link key={t} to={`/word/${t}`} className="btn btn-primary">
+                {t}
+              </Link>
+            ))}
+          </RotatingPrompt>
+        </div>
+      )}
     </>
   );
 }

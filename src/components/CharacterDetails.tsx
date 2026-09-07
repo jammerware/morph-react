@@ -6,27 +6,33 @@ import characterGet from "../api/character";
 import CharacterFrequency from "./CharacterFrequency";
 import ContentLabel from "./ContentLabel";
 import Loading from "./Loading";
+import { translateAllPost } from "../api/translation";
 
 export type CharacterDetailsProps = { character: string; fromWord?: string };
 
 export default function CharacterDetails(props: CharacterDetailsProps) {
   const [character, setCharacter] = useState<ApiCharacter | null>(null);
+  const [translations, setTranslations] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(true);
 
   const markup = {
     meanings: (
       <ul className="flex items-center gap-2">
         {(character?.definitions ?? []).map((d) => (
-          <li>{d}</li>
+          <li key={d}>{d}</li>
         ))}
       </ul>
     ),
     commonWords: (
       <ul className="flex items-center gap-2">
         {(character?.commonWords ?? []).map((w) => (
-          <li>
+          <li key={w.word}>
             <Link className="btn btn-xsmall" to={`/word/${w.word}`}>
-              <span className="text-primary">{w.word}</span>
+              <span className="text-primary">
+                {w.word}
+
+                {translations[w.word] && <span> ({translations[w.word]})</span>}
+              </span>
             </Link>
           </li>
         ))}
@@ -56,6 +62,35 @@ export default function CharacterDetails(props: CharacterDetailsProps) {
     };
   }, [props.character]);
 
+  useEffect(() => {
+    let isLoading = true;
+    if (!character) return;
+
+    translateAllPost({
+      text: character?.commonWords.map((w) => w.word) ?? [],
+    })
+      .then((result) => {
+        if (isLoading) {
+          const entries = result.translations.map((r) => [r.translation, r.l1]);
+          setTranslations(Object.fromEntries(entries));
+        }
+      })
+      .catch((err) => {
+        if (isLoading) {
+          throw new Error(
+            `Couldn't load translations for ${character.character}: ${err}`,
+          );
+        }
+      })
+      .finally(() => {
+        if (isLoading) setIsLoading(false);
+      });
+
+    return () => {
+      isLoading = false;
+    };
+  }, [character]);
+
   return (
     <>
       <div className="breadcrumbs text-sm">
@@ -71,7 +106,9 @@ export default function CharacterDetails(props: CharacterDetailsProps) {
           <li>{props.character}</li>
         </ul>
       </div>
+
       <Loading isLoading={isLoading} />
+
       {character && (
         <div className="grid grid-cols-1 md:grid-cols-[auto_1fr]">
           <div className="p-8">
@@ -85,12 +122,12 @@ export default function CharacterDetails(props: CharacterDetailsProps) {
             <dt>
               <ContentLabel text="Meanings" />
             </dt>
-            {markup.meanings}
+            <dd>{markup.meanings}</dd>
 
             <dt className="mt-8">
               <ContentLabel text="Common Words" />
             </dt>
-            {markup.commonWords}
+            <dd>{markup.commonWords}</dd>
 
             <dt className="mt-8">
               <ContentLabel text="Stroke Count" />
@@ -99,8 +136,10 @@ export default function CharacterDetails(props: CharacterDetailsProps) {
 
             <dt className="mt-8">
               <ContentLabel text="Frequency" />
-              <CharacterFrequency freqRank={character.freqRank} />
             </dt>
+            <dd>
+              <CharacterFrequency freqRank={character.freqRank} />
+            </dd>
           </dl>
         </div>
       )}
