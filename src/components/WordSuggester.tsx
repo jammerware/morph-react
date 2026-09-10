@@ -17,9 +17,7 @@ export default function WordSuggester() {
 
   return (
     <>
-      {isLoading && (
-        <progress className="progress progress-primary w-full"></progress>
-      )}
+      {isLoading && <progress className="progress progress-primary w-full"></progress>}
 
       {terms && terms.length > 0 && (
         <div className="flex gap-2">
@@ -27,7 +25,7 @@ export default function WordSuggester() {
           <RotatingPrompt className="h-10 grow">
             {terms.map((t) => (
               <Link key={t} to={`/word/${t}`} className="btn btn-primary">
-                {t}
+                <span className="text-primary-content">{t}</span>
               </Link>
             ))}
           </RotatingPrompt>

@@ -58,16 +58,12 @@ export default function Word(props: { wordL1: string }) {
         <div className="card-title">
           {decomposition?.word?.translation}
           {decomposition?.word?.l1 && (
-            <span className="text-base-content/60">
-              ({decomposition?.word?.l1})
-            </span>
+            <span className="text-base-content/60">({decomposition?.word?.l1})</span>
           )}
         </div>
 
         <div className="card-body">
-          {isLoading && (
-            <progress className="progress progress-primary w-full"></progress>
-          )}
+          {isLoading && <progress className="progress progress-primary w-full"></progress>}
 
           {!isLoading && (
             <>
@@ -76,16 +72,14 @@ export default function Word(props: { wordL1: string }) {
           )}
         </div>
 
-        <div className="card-actions justify-end">
+        <div className="card-actions justify-end pt-4">
           <div className="tooltip" data-tip="View on Google Translate">
             <Link
               to={`https://translate.google.com/?sl=zh-CN&text=${decomposition?.word?.translation}&tl=en`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <button className="btn btn-primary btn-circle material-icons">
-                g_translate
-              </button>
+              <button className="btn btn-primary btn-circle material-icons">g_translate</button>
             </Link>
           </div>
 

@@ -24,14 +24,8 @@
 .checkbox:focus,
 .radio:focus {
   outline: none;
-  box-shadow: 0 0 0 4px
-    color-mix(in oklab, var(--color-primary) 25%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-primary) 25%, transparent);
   border-color: var(--color-primary);
-}
-
-/* breadcrumb a gets daisy primary */
-.breadcrumbs a {
-  color: var(--color-primary);
 }
 
 :root {
@@ -45,4 +39,8 @@ body,
 
 body {
   margin: 0;
+}
+
+a {
+  color: var(--color-primary);
 }
