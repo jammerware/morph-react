@@ -34,6 +34,7 @@ export default function SearchBox() {
             className="input input-xl grow focus:outline-none focus:ring-0 focus:border-primary"
             onChange={handleOnChange}
             onKeyDown={handleOnKeyDown}
+            autoFocus
           />
           <button
             className="btn btn-circle btn-primary material-icons"
